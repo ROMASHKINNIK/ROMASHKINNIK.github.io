@@ -3,71 +3,101 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Улыбнись!</title>
+  <title>Ты прекрасна!</title>
 
-  <!-- Модный шрифт с Google Fonts -->
+  <!-- Модный шрифт -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
 
   <style>
     body {
       margin: 0;
+      height: 100vh;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      background: #1e1e1e; /* темный фон, чтобы градиент был заметен */
+      overflow: hidden;
       font-family: 'Montserrat Alternates', sans-serif;
-      text-align: center;
+      background: linear-gradient(135deg, #6a11cb, #2575fc, #ff758c, #ff7eb3);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      cursor: pointer;
     }
 
     h1 {
       position: absolute;
-      top: 20px;
-      width: 100%;
+      top: 40%;
       font-size: 3em;
-      background: linear-gradient(90deg, #00ffe0, #9b00ff); /* бирюзово-фиолетовый градиент */
+      background: linear-gradient(90deg, #ffde59, #ff6a00);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      text-align: center;
+      text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
       animation: floatText 2s ease-in-out infinite alternate, fadeText 2s ease-in-out infinite alternate;
-      text-shadow: 1px 1px 5px rgba(0,0,0,0.3);
     }
 
-    video {
-      width: 100%;
-      max-width: 600px;
-      border-radius: 10px;
-      transform: scaleX(-1); /* зеркально, как обычное селфи */
-      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    /* Анимации фона и текста */
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
-    /* Анимации текста */
     @keyframes floatText {
       0% { transform: translateY(0px); }
-      100% { transform: translateY(-15px); }
+      100% { transform: translateY(-20px); }
     }
 
     @keyframes fadeText {
-      0% { opacity: 0.8; }
+      0% { opacity: 0.85; }
       100% { opacity: 1; }
+    }
+
+    .spark {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: radial-gradient(circle, #fff8, #fff0);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: sparkAnim 1s linear forwards;
+    }
+
+    @keyframes sparkAnim {
+      0% { transform: scale(1) translateY(0); opacity: 1; }
+      100% { transform: scale(0) translateY(-50px); opacity: 0; }
     }
   </style>
 </head>
 <body>
-  <h1>Улыбнись!</h1>
-  <video id="camera" autoplay playsinline></video>
+
+  <h1 id="compliment">Ты невероятно прекрасна ✨</h1>
 
   <script>
-    async function startCamera() {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
-        const video = document.getElementById('camera');
-        video.srcObject = stream;
-      } catch (err) {
-        alert("Невозможно открыть камеру: " + err);
-      }
-    }
-    startCamera();
+    const compliments = [
+      "Ты сияешь, как звезда 🌟",
+      "Твоя улыбка волшебна 😊",
+      "Ты вдохновляешь каждый день 💖",
+      "Мир становится ярче с тобой 🌈",
+      "Ты уникальна и неповторима 🌸",
+      "Твоя энергия — настоящая магия ✨"
+    ];
+
+    const h1 = document.getElementById('compliment');
+
+    // Меняем комплимент при клике
+    document.body.addEventListener('click', (e) => {
+      h1.textContent = compliments[Math.floor(Math.random() * compliments.length)];
+
+      // создаём маленький spark
+      const spark = document.createElement('div');
+      spark.classList.add('spark');
+      spark.style.left = e.clientX + 'px';
+      spark.style.top = e.clientY + 'px';
+      document.body.appendChild(spark);
+
+      // удаляем spark через 1 секунду
+      setTimeout(() => spark.remove(), 1000);
+    });
   </script>
 </body>
 </html>
